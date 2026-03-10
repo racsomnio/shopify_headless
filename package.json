@@ -1,5 +1,5 @@
 {
-  "name": "also-shopify-platform",
+  "name": "shopify-platform",
   "version": "1.0.0",
   "private": true,
   "workspaces": [

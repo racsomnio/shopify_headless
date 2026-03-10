@@ -58,7 +58,7 @@ A full-stack practice project covering every required skill: Shopify Admin/Store
 ## Project Structure
 
 ```
-also_project/
+project/
 ├── apps/
 │   ├── backend/               # Node.js + Express
 │   │   └── src/
@@ -100,7 +100,7 @@ also_project/
 
 ```bash
 git clone <repo>
-cd also_project
+cd project
 npm install
 ```
 

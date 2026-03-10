@@ -33,7 +33,7 @@ const router = Router();
  * Body:
  * {
  *   "shopifyOrderId": "gid://shopify/Order/6789",   // or numeric "6789"
- *   "customerEmail": "rider@also.com",
+ *   "customerEmail": "rider@example.com",
  *   "reason": "defective",
  *   "lineItems": [
  *     {
