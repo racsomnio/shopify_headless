@@ -18,7 +18,8 @@ const SHOP = import.meta.env.VITE_SHOPIFY_SHOP || 'oscarslab.myshopify.com';
 const CLIENT_ID = import.meta.env.VITE_SHOPIFY_CUSTOMER_CLIENT_ID || '';
 
 // In development, Shopify requires HTTPS — set this to your ngrok/tunnel URL.
-// In production, leave it unset and window.location.origin is used automatically.
+// In production on https://oscarslab.dev, leave unset so window.location.origin is https://oscarslab.dev
+// (register that origin + https://oscarslab.dev/auth/callback in Shopify Headless → Customer Account API).
 const REDIRECT_BASE = import.meta.env.VITE_SHOPIFY_REDIRECT_BASE || '';
 
 const KEYS = {

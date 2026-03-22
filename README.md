@@ -134,6 +134,8 @@ npm run dev:backend      # http://localhost:3000
 npm run dev:storefront   # http://localhost:5173
 ```
 
+Production storefront for this project: **https://oscarslab.dev** — set `CORS_ORIGINS` (and Shopify Customer Account callback URLs) to match.
+
 ### 5. Expose webhooks locally (ngrok)
 
 ```bash
@@ -164,6 +166,31 @@ Extend: implement customer login with Customer Account API
 ### Exercise 5 — Event-Driven Patterns
 Study `eventBus.js` — convert one handler to a real AWS SQS consumer  
 Reference: `docs/EVENT_DRIVEN_PATTERNS.md`
+
+---
+
+## Backend API security
+
+All **`/api/*`** routes are protected with:
+
+| Layer | Purpose |
+|--------|---------|
+| **`BACKEND_API_KEY`** | Required when `NODE_ENV=production`. Send `Authorization: Bearer <key>` or `X-API-Key: <key>`. In **development**, if unset, `/api/*` stays open (a warning is logged). |
+| **`CORS_ORIGINS`** | Comma-separated allowed browser origins (e.g. `http://localhost:5173`, `https://oscarslab.dev` for this project’s production storefront). Dev with an empty list allows any origin. |
+| **Rate limit** | `RATE_LIMIT_MAX` requests per `RATE_LIMIT_WINDOW_MS` per IP on `/api/*` only. |
+| **Helmet** | Security headers; **HSTS** in production (use HTTPS in front of Node). |
+| **Body limit** | `BODY_LIMIT` (default `1mb`) on JSON and webhooks. |
+| **Input validation** | [Zod](https://zod.dev) schemas on query, path, and body for orders, products, and RMA routes. |
+
+**Webhooks** (`/webhooks/*`) are not behind `BACKEND_API_KEY`; they use **HMAC** verification instead.
+
+**Local dev with a key:** set the same value in root `.env` as `BACKEND_API_KEY` and in `apps/storefront/.env` as `VITE_BACKEND_API_KEY` so the Vite proxy can attach `X-API-Key` when you call `/api` through the dev server.
+
+```bash
+# Example (PowerShell) — replace key if you set BACKEND_API_KEY
+$headers = @{ "X-API-Key" = "your-secret" }
+Invoke-RestMethod -Uri "http://localhost:3000/api/products" -Headers $headers
+```
 
 ---
 

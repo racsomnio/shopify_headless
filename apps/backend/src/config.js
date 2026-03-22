@@ -21,6 +21,23 @@ export const config = {
   server: {
     port: parseInt(process.env.PORT || '3000', 10),
     nodeEnv: process.env.NODE_ENV || 'development',
+    /** Behind ngrok, ALB, nginx — required for correct client IP in rate limiting */
+    trustProxy: process.env.TRUST_PROXY === 'true' || process.env.TRUST_PROXY === '1',
+    /** Max JSON / raw body size (webhooks + REST) */
+    bodyLimit: process.env.BODY_LIMIT || '1mb',
+    /** Per-IP rate limit for /api/* only (webhooks excluded — Shopify retries) */
+    rateLimitWindowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000', 10), // 15 min
+    rateLimitMax: parseInt(process.env.RATE_LIMIT_MAX || '100', 10),
+    /**
+     * Required in production — send as Authorization: Bearer <key> or X-API-Key: <key>
+     * In development, if unset, /api/* is open (warning logged).
+     */
+    apiKey: process.env.BACKEND_API_KEY || '',
+    /** Comma-separated allowed browser origins — e.g. dev + https://oscarslab.dev (production storefront) */
+    corsOrigins: (process.env.CORS_ORIGINS || '')
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean),
   },
   db: {
     url: process.env.DATABASE_URL || './data/also.db',
